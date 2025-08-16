@@ -1,4 +1,4 @@
-# Retro-Stream-Tutorial
+# Retro Stream Tutorial
 A tutorial on how to stream Youtube or any other video content to PowerPC Macs.
 
 ## Background
@@ -105,10 +105,14 @@ the capture side to 16,000hz which is not ideal.
 
 ## Tools
 
-1. [Virtual Buddy](https://github.com/insidegui/VirtualBuddy) - An excellent Apple Silicon OS Virtualization Tool
-1. [FFMPEG](https://ffmpeg.org/download.html#build-mac) - The one-stop-shop for all video encoding and decoding
-1. [Black Hole](https://github.com/ExistentialAudio/BlackHole) - A virtual audio interface that we need so FFMPEG can capture the system audio
-1. [VLC](https://www.videolan.org/vlc/download-macosx.html) - The one-stop-shop for all video playback on OS X for 25 years
+1. [Virtual Buddy](https://github.com/insidegui/VirtualBuddy) - An excellent 
+   Apple Silicon OS Virtualization Tool
+1. [FFMPEG](https://ffmpeg.org/download.html#build-mac) - The one-stop-shop 
+   for all video encoding and decoding
+1. [Black Hole](https://github.com/ExistentialAudio/BlackHole) - A virtual 
+   audio interface that we need so FFMPEG can capture the system audio
+1. [VLC](https://www.videolan.org/vlc/download-macosx.html) - The one-stop-shop 
+   for all video playback on OS X for 25 years
 
 # Tutorial: Set up the Host
 
@@ -116,13 +120,41 @@ the capture side to 16,000hz which is not ideal.
 
 1. Install [Virtual Buddy](https://github.com/insidegui/VirtualBuddy)
 1. Open Virtual Buddy and create a new VM
-   1. OS: select MacOS Monterey 12.5.1
-      1. You can use which ever version you want, but the older systems take less disk space
-   1. Boot Disk: 32GB (64 may be needed for newer systems)
-   1. Display: 1152x720 with 72 Pixels Per Inch
-      1. This depends on the size of the PowerPC Mac screen. You want to match the aspect ratio and resolution as close as possible.
-      1. This is changeable later and also you can scale it in FFMPEG before it hits your PowerPC Mac.
-   1. Network: Bridged (Automatic) - **NOT NOT**
-   1. Enable Sound but you can disable sound input
-
-
+   1. Select Ventura→macOS 13.5.2 - [Screenshot](Images/010-VM/00-VMSettings-OS.png)
+      1. You can use which ever version you want, but older systems take less 
+         disk space
+      1. This is not changeable later, so you want to set it as low as possible 
+         to not waste space on your Mac
+   1. Virtual Buddy will ask you for the settings - [Screenshot](Images/010-VM/01-VMSettings.png)
+      1. Boot Disk: 40GB (64 may be needed for newer systems)
+      1. Display: 1152x720 with 72 Pixels Per Inch
+         1. This depends on the size of the PowerPC Mac screen. You want to 
+            match the aspect ratio and resolution as close as possible.
+         1. This is changeable later and also you can scale it in FFMPEG if 
+            its too high for the PowerPC Mac.
+         1. Network: Bridged (Automatic) - **do not choose NAT**
+         1. Enable Sound but you can disable sound input
+      1. [Installing Screenshot](Images/010-VM/02-VMInstall.png)
+1. Boot up your VM and Configure the User - [Screenshot](Images/010-VM/03-VMBoot.png)
+   1. Migration: Not Now - [Screenshot](Images/010-VM/04-VMSettings-Migrate.png)
+   1. iCloud: Set Up Later - [Screenshot](Images/010-VM/05-VMSettings-iCloud.png)
+   1. User: Simple username and password - [Screenshot](Images/010-VM/06-VMSettings-User.png)
+      1. Simple username and password makes access convenient. 
+         Please don't boot this VM outside of your home network.
+   1. Location Services: Disable - [Screenshot](Images/010-VM/07-VMSettings-Location.png)
+   1. ScreenTime: Set Up Later - [Screenshot](Images/010-VM/08-VMSettings-ScreenTime.png)
+   1. [Booted-Up Screenshot](Images/010-VM/09-VMSettings-Booted.png)
+1. Configure System Settings
+   1. (Optional) Users&Groups: Enable Automatic Login - [Screenshot](Images/010-VM/10-VMSettings-AutoLogin.png)
+   1. (Optional) Lock Screen: Disable Screensaver, Monitor Poweroff, and password - [Screenshot](Images/010-VM/11-VMSettings-LockScreen.png)
+   1. (Optional) General→About: Give it a fun name - [Screenshot](Images/010-VM/12-VMSettings-Name.png)
+   1. (Optional) General→Sharing: Enable Screen Sharing, File Sharing, and Remote Login - [Screenshot](Images/010-VM/13-VMSettings-Sharing.png)
+   1. **(Required)** Privacy→Screen Recording: Add Termina - [Screenshot](Images/010-VM/14-VMSettings-Privacy.png)
+   1. (Optional) Software Update: Disable automatic updating - [Screenshot](Images/010-VM/15-VMSettings-Update1.png)
+   1. (Optional) Software Update: Perform Updates that do not update to different major version of OSX
+      1. Apple actually makes this kind of confusing. You need to look for 
+        "Also Available→Other Updates Available→More Info"
+      1. [Screenshot 1](Images/010-VM/15-VMSettings-Update1.png) 
+      1. [Screenshot 2](Images/010-VM/16-VMSettings-Update2.png) 
+      1. [Screenshot 3](Images/010-VM/17-VMSettings-Update3.png) 
+1. Login to Youtube and play a video - you should hear sound through your Mac's speakers - [Screenshot](Images/010-VM/20-VMSettings-YoutubeLogin.png)
