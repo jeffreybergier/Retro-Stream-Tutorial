@@ -158,3 +158,39 @@ the capture side to 16,000hz which is not ideal.
       1. [Screenshot 2](Images/010-VM/16-VMSettings-Update2.png) 
       1. [Screenshot 3](Images/010-VM/17-VMSettings-Update3.png) 
 1. Login to Youtube and play a video - you should hear sound through your Mac's speakers - [Screenshot](Images/010-VM/20-VMSettings-YoutubeLogin.png)
+
+## Step 2: Install FFMPEG
+
+FFMPEG is probably most easily installed via HomeBrew but HomeBrew requires
+installing Xcode developer tools which is pretty large. So instead I chose to
+download an install package from [https://ffmpeg.martin-riedl.de](https://ffmpeg.martin-riedl.de)
+
+1. Download a Release Build Package under the `macOS (Apple Silicon/arm64)` section - [Screenshot](Images/020-Install/01-FF-Download.png)
+1. Run the installer package
+1. Test that FFMPEG works from Terminal: `ffmpeg -version` - [Screenshot](Images/020-Install/02-FF-Confirm.png)
+
+## Step 3: Install Black Hole 2CH
+
+Follow the instructions on the [Black Hole Github Project.](https://github.com/ExistentialAudio/BlackHole?tab=readme-ov-file#installation-instructions)
+Black Hole requires you to submit your email address to get the installer
+link. If you don't want to do that, then you can use HomeBrew to install it.
+
+1. [Submit your email address](https://existential.audio/blackhole/) to download BlackHole 2CH - [Screenshot](Images/020-Install/03-BH-Email.png)
+1. Check your email, open the link, and download the 2CH version. - [Screenshot](Images/020-Install/04-BH-Download.png)
+   1. Since we turned on File Sharing to your VM you can transfer the file that way
+1. Run the installer package
+1. Restart the VM
+1. Open the 'Audio MIDI Setup' application. This is built-in to OSX and is 
+   under the Utilities folder
+1. Change the Format to 16,000 Hz - [Screenshot](Images/020-Install/05-BH-Configure.png)
+   1. As I said, this is a workaround to an FFMPEG problem where it cannot
+      seem to capture audio when it is set to 44,100 or 48,000. PowerPC Macs
+      use 41,100 Hz and so that would be ideal for audio quality. I really
+      want to know how to fix this problem, but I have not been able to find
+      any solutions.
+1. Confirm it works by playing a Youtube video again: In the Speaker menu
+   you can choose to play through Speakers or BlackHole 2CH - [Screenshot](Images/020-Install/06-BH-Confirm.png)
+   1. When you play through Speakers you should hear the video on the host Mac. 
+   And when you change it to BlackHole you should no longer hear it.
+
+
