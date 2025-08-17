@@ -1,5 +1,26 @@
+[![iMac G4 Streaming Youtube](Images/000-Title/01-Title-Thumb.jpg)](Images/000-Title/02-Title-Full.jpg)
+
 # Retro Stream Tutorial
+
 A tutorial on how to stream Youtube or any other video content to PowerPC Macs.
+To see a video of the kind of quality you can expect,
+[check this recording.](https://drive.google.com/file/d/1f61zVpnH4qXBVWmLIRB0WwakSu85JOzu/view?usp=share_link)
+I have noticed that the streaming quality from Google Drive is not always 
+great, so download it to be sure you are seeing the full quality.
+
+## Who Am I?
+
+I'm Jeff, a software developer and general Mac lover. I recently got an 
+iMac G4 and restored it with SSD and max RAM. I got this machine because 
+when I was in High School I desperately wanted one but could never get it. 
+But I didn't want to get it if it was going to sit on a shelf and collect dust.
+
+So before I bought it I tried this streaming setup to make sure it could work. 
+And I am very happy to report that I am happy with the results and this 
+machine now makes a great music video display for my KPOP while I am working.
+
+You can see all updates on my iMac G4 using the [\#iMacG4](https://jeffburg.social/tags/iMacG4)
+tag on my Mastodon. No account required. 
 
 ## Background
 I am writing this in 2025 and I would say that it has been a good 10 years
@@ -21,7 +42,7 @@ frustrated by their inability to do "simple" tasks like play Youtube. But
 the reason I am giving this background is to illustrated that this is no
 simple task.
 
-## Why Can't Old Computers Play Youtube
+### Why Can't Old Computers Play Youtube
 
 1\) **[The TLS Apocalypse](https://oldvcr.blogspot.com/2020/11/fun-with-crypto-ancienne-tls-for.html)**: 
 Means PowerPC macs can't connect to Youtube at all.
@@ -47,7 +68,7 @@ barely play back postage stamp sized video in H.264.
    we never got high quality videos back in the day because there was not
    enough bandwidth on the internet to get quality video out of these codecs.
    
-## How to Stream High Quality Video on a PowerPC Mac
+### How to Stream High Quality Video on a PowerPC Mac
 
 We are basically going to use the fact that we have a local high speed ethernet
 network that our PowerPC Mac sits on to stream an incredibly-high bit-rate
@@ -59,9 +80,9 @@ The approach replaces the limited CPU power of PowerPC Macs and replaces it
 with tons of bandwidth which they can handle thanks to their 10/100Mbps
 ethernet ports.
 
-## Known Limitations
+### Known Limitations
 
-### Video Quality:
+#### Video Quality:
 
 I want to be clear here that we are not going to get beautiful 4K content
 playing on our PowerPC Macs. They just do not have enough power. But depending
@@ -72,7 +93,7 @@ on the system you have you will probably at least get:
 - 20-30FPS
 - Decently clear picture without too many blocky compression artifacts
 
-### Audio Quality
+#### Audio Quality
 
 I could actually use suggestions on this because this seems to be an FFMPEG
 limitation on Apple Silicon Macs (I did not try an Intel Mac). But I cannot get
@@ -80,7 +101,7 @@ FFMPEG to capture 44,100 or 48,000hz audio on the host Mac. It always comes
 out poppy and out of sync and weird. So I had to reduce the audio quality on
 the capture side to 16,000hz which is not ideal.
 
-## System Requirements
+### System Requirements
 
 1. PowerPC Mac running at least Mac OS X 10.4 Tiger (10.5 Leopard preferred)
    1. What about Jaguar? [VLC claims](https://www.videolan.org/vlc/download-macosx.html) 
@@ -98,12 +119,12 @@ the capture side to 16,000hz which is not ideal.
 1. Apple Silicon Mac: It goes without saying that these Macs are so overpowered
    for this that using this set up does not even push them at all.
    
-### My Setup
+#### My Setup
 
 - [iMac (Flat Panel 17-inch, 1GHz)](https://everymac.com/systems/apple/imac/specs/imac_1.0_17_fp.html) from 2003 with SSD and 1.5GB RAM Upgrade
 - [MacBook Air \(2020\)](https://everymac.com/systems/apple/macbook-air/specs/macbook-air-m1-8-core-8-core-gpu-13-retina-display-2020-specs.html) with M1 Chip and 16GB of RAM
 
-## Tools
+### Tools
 
 1. [Virtual Buddy](https://github.com/insidegui/VirtualBuddy) - An excellent 
    Apple Silicon OS Virtualization Tool
@@ -445,3 +466,45 @@ ffmpeg \
   -f mpegts \
   "udp://BonjourName.local:1234?pkt_size=1316"
 ```
+
+# FAQ
+
+1. Isn't this hard on a Retro Mac?
+   1. Yeah, this is very hard on your old Mac. My iMac G4 can do it for hours
+      with no stability challenges, but we are talking 100% CPU and many many 
+      gigabytes of network traffic.
+   1. This is more of a question on outlook of life than anything else. I 
+      didn't get my retro Mac so it could sit on the shelf and look pretty. 
+      They were meant to be used and so I wanted to use it as my
+      secondary/background music screen.
+1. Won't this slow down my Apple Silicon Mac?
+   1. I have the absolute slowest Apple Silicon Mac. Its an M1 MacBook Air
+      with no fan. Its true that this solution takes about 100% of 1 core of 
+      the CPU. But I have not noticed any slow downs or throttling. This 
+      includes when I am using Xcode to develop software for iOS and Mac apps.
+1. There must be a way to get 44,100Hz sampling?
+   1. I agree. This has been a big annoyance, but since I listen to the audio 
+      on my Airpods anyway instead of through the stream, I haven't dove into
+      more than a few hours.
+   1. Perhaps if I used a Linux VM this would not be a problem? I also thought
+      that it was because I was doing the audio recording in a VM... but I 
+      did the exact same setup on the MacBook Air directly and it had the same 
+      issue. So, not sure at all what the problem is.
+1. Can this be done without an Apple Silicon Mac?
+   1. Absolutely! The server could be any machine that runs FFMPEG which is 
+      pretty much any machine. I look forward to seeing a future tutorial that 
+      uses a Raspberry Pi 🍓
+   1. I just created this tutorial using Virtual Buddy and Apple Silicon 
+      because thats what I have. But there is no reason the exact same thing 
+      can't be done with an Intel Mac and VMWare Fusion 
+      (which is free now by the way)
+   1. Also, a Virtual Machine is totally not needed. For example you could 
+      get one of these [HDMI dummy plugs](https://www.amazon.com/Woieyeks-Virtual-Emulator-Headless-Supports/dp/B0CKKLTWMN/ref=sr_1_3?crid=2I5T3W67D1BIN&dib=eyJ2IjoiMSJ9.V54_l_dy5H-QDQPGm4g64-IB4nnDKf6MMnGSzGvNaa04HMqCrtl_czQuKDGjzR34HWrJ0t9lDaNQOTOnfdk6Kza_xoSY4_EpvtrPCd6MZzrWcPd6eXbIOZ4-kROOlNDpiB3sy7UaIzeBHIYQDTen3DneHtjS2mhbMYfVTxIo9lEHalFwkwXg7XSfYfZh79h9O-EWcOsyRawr2s1EyhAbp0LePhoqbrCzGr0P1Qhg5Io.hdRAftjL-y2y_Og7ss0CIH8VCx6QJecdZOSzQT2h7LM&dib_tag=se&keywords=HDMI%2BDummy%2BPlug&qid=1755416251&refresh=1&sprefix=hdmi%2Bdummy%2Bplug%2Caps%2C283&sr=8-3&th=1) 
+      and use that "screen" as the capture device for FFMPEG/AVFoundation and 
+      then use your PowerPC Mac as a second monitor for your main Mac. 
+      My MacBook Air only supports one  external monitor, so I did not take 
+      this approach.
+1. Dedicating 4 Cores and 8GB of RAM to this VM seems excessive, no?
+   1. I agree. After I got everything all set up and running, I lowered the 
+      the CPU Cores to 2 and the RAM to 4GB and macOS Ventura still seems to 
+      run fine and stream video with no issues.
