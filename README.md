@@ -114,6 +114,16 @@ the capture side to 16,000hz which is not ideal.
 1. [VLC](https://www.videolan.org/vlc/download-macosx.html) - The one-stop-shop 
    for all video playback on OS X for 25 years
 
+### Why Use a Virtual Machine
+
+Using a virtual machine is totally optional. However, FFMPEG uses AVFoundation
+to capture the system video and audio. However, AVFoundation only presents
+entire screens, not windows, as a capture device that FFMPEG can record.
+This means if you don't use a VM, you would need to sacrifice an entire screen
+on your Mac to streaming to the PowerPC Mac. Using the VM means, you just
+manage the streaming session as a little window that you can resize or minimize
+without affecting the stream in progress.
+
 # Tutorial: Set up the Host
 
 ## Step 1: Set up your Virtual Machine
@@ -193,4 +203,53 @@ link. If you don't want to do that, then you can use HomeBrew to install it.
    1. When you play through Speakers you should hear the video on the host Mac. 
    And when you change it to BlackHole you should no longer hear it.
 
+## Step 4: Test on Your Modern Mac
+
+This requires you to install [install VLC](https://www.videolan.org/vlc/download-macosx.html)
+on your Apple Silicon Mac (not the PowerPC Mac and not the VM). I won't cover 
+that because thats a normal app installation. - [Screenshot](Images/030-Test/01-Test-Download.png)
+
+1. Get the capture device ID's - [Screenshot](Images/030-Test/01-Test-Devices.png)
+   1. FFMPEG Uses Apple's AVFoundation to capture system video and audio and 
+      AVFoundation presents devices with an ID number. On the VM it should be
+      `0:0` but it could be different. So lets find out
+   1. `ffmpeg -f avfoundation -list_devices true -i ""`
+1. Get the Bonjour name for your Apple Silicon Mac - [Screenshot](Images/030-Test/03-Test-Bonjour.png)
+   1. System Settings→General→Sharing→Local Hostname
+   1. When using UDP, the VM and FFMPEG are basically going to fire and forget
+      a huge high-bandwidth stream of bits at the target computer. So when
+      starting the command, you need to know the IP Address or Bonjour name
+      of the target Mac, whether thats the PowerPC Mac or the Apple Silicon Mac
+      (in this case)
+   1. Note: If you want to change the Bonjour name it is best to change the
+      whole system name under General→About→Name. Doing this will also change
+      the bonjour name.
+1. Start the Stream - [Screenshot](Images/030-Test/04-Test-FFMPEG1.png)
+   1. You need to change the Bonjour name on the last line of this command
+   1. If the devices you found are not both 0, then you need to change 
+      the line that says `-i 0:0`
+   1. I will explain all of the options later in this tutorial
+   1. When you run this command the first time, you will be asked to allow
+      the Terminal to access the microphone. Be sure to choose Allow. - [Screenshot](Images/030-Test/05-Test-FFMPEG2.png)
+   1. ```
+      ffmpeg \
+        -f avfoundation \
+        -framerate 30 \
+        -i "0:0" \
+        -vcodec mpeg4 \
+        -qscale:v 1 \
+        -vtag XVID \
+        -acodec libmp3lame \
+        -b:a 192k \
+        -ac 2 \
+        -f mpegts \
+        "udp://BonjourName.local:1234?pkt_size=1316"
+      ```
+1. Start VLC and Choose File→Open Network - [Screenshot](Images/030-Test/06-Test-VLC.png)
+   1. Type `udp://@:1234` and click Open
+1. Success Screenshots
+   1. [Initial Stream Results](Images/030-Test/07-Test-Working1.png)
+   1. [Open Youtube in the VM](Images/030-Test/08-Test-Working2.png)
+   1. [Full Screen Youtube](Images/030-Test/09-Test-Working3.png)
+1. Type Q in the Terminal to quit FFMPEG  - [Screenshot](Images/030-Test/10-Test-Quit.png)
 
