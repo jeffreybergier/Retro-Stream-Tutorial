@@ -4,9 +4,10 @@
 
 A tutorial on how to stream Youtube or any other video content to PowerPC Macs.
 To see a video of the kind of quality you can expect,
-[check this recording.](https://drive.google.com/file/d/1f61zVpnH4qXBVWmLIRB0WwakSu85JOzu/view?usp=share_link)
-I have noticed that the streaming quality from Google Drive is not always 
-great, so download it to be sure you are seeing the full quality.
+[check this recording](https://drive.google.com/file/d/13i3V9a7xyKCAwo0-r4rAtxuz6pWQDmoB/view?usp=sharing)
+on my Google Drive. I have noticed that the streaming quality from Google 
+Drive directly is not always great, so download it to be sure you are seeing 
+the full quality.
 
 ## Table of Contents
 - [Retro Stream Tutorial](#retro-stream-tutorial)
@@ -384,24 +385,6 @@ restart it.
 Overall, I found XVID had the best balance of quality and smoothness on my iMac 
 but MPEG 1 was really close as well.
 
-### XVID Command Explanation
-
-| Command                                        | Explanation |
-|------------------------------------------------|-------------|
-| `ffmpeg`                                       |             |
-| `-f avfoundation \`                            |             |
-| `-framerate 20 \`                              | Lowering the framerate is one of the easiest ways to reduce load on the PowerPC CPU. I find 20 to be the best balance, but set it to a multiple of 60 for best performance. |
-| `-i "0:0" \`                                   | This is the AVFoundation device numbers, left is video and right is audio. You shouldn't change this unless you decide not to stream audio (covered below). |
-| `-vf scale=720x450 \`                          | Scaling the output size of the video is also one of the easiest ways to reduce load on the PowerPC CPU. I was able to get 720p working just fine on Leopard, but on Tiger I needed to reduce. Use `-vf scale=iw/2:ih/2` to reduce the resolution in half rather than manually calculating it. |
-| `-vcodec mpeg4 \`                              | In VLC, the XVID encoder is part of the MPEG4 encoder |
-| `-qscale:v 3 \`                                | Lower the video quality also greatly help improve stream performance. 1 is the highest quality and 31 is the lowest, but I found anything above 10 to be very very low quality. I found 3 to always give the best compromise |
-| `-vtag XVID \`                                 | Enables the XVID encoder inside the MPEG4 encoder |
-| `-acodec libmp3lame \`                         | Streams as MP3 Audio. This is changeable, but I found MP3 was always easy for the PowerPC to handle |
-| `-b:a 192k \`                                  | MP3 bitrate. Good MP3 is usually 192k, 256k, or 320k. Note that because I could not get 44,100Hz audio into FFMPEG successfully, the audio will never really sound good for music until I figure that out. |
-| `-ac 2 \`                                      | 2 Channel Audio. |
-| `-f mpegts \`                                  | MPEG Transport Stream is the format we are using for streaming. |
-| `"udp://BonjourName.local:1234?pkt_size=1316"` | This is the destination of the stream, IP or Bonjour Name work here. ChatGPT said I should specify the packet size to perfectly match MPEGTS, but I am not sure if it helps or not. |
-
 ### XVID Command for Copy and Paste
 
 Note I removed the scaling command. You can add it back in if needed.
@@ -421,14 +404,7 @@ ffmpeg \
   "udp://BonjourName.local:1234?pkt_size=1316"
 ```
 
-## MPEG1 and MPEG2
-
-My 1GHz G4 was not really powerful enough to play MPEG2 at 720p. While this 
-machine can play DVD, you have to remember that DVD is MPEG2 at 480p max. So 
-720p is just too much for this CPU. However, MPEG1 did work pretty well at 
-about 8MBps of bandwidth. 
-
-### MPEG1 Command Explanation
+### XVID Command Explanation
 
 | Command                                        | Explanation |
 |------------------------------------------------|-------------|
@@ -437,15 +413,21 @@ about 8MBps of bandwidth.
 | `-framerate 20 \`                              | Lowering the framerate is one of the easiest ways to reduce load on the PowerPC CPU. I find 20 to be the best balance, but set it to a multiple of 60 for best performance. |
 | `-i "0:0" \`                                   | This is the AVFoundation device numbers, left is video and right is audio. You shouldn't change this unless you decide not to stream audio (covered below). |
 | `-vf scale=720x450 \`                          | Scaling the output size of the video is also one of the easiest ways to reduce load on the PowerPC CPU. I was able to get 720p working just fine on Leopard, but on Tiger I needed to reduce. Use `-vf scale=iw/2:ih/2` to reduce the resolution in half rather than manually calculating it. |
-| `-vcodec mpeg1video \`                         | MPEG1 encoder, you can change the 1 to 2 if you think your system can handle MPEG2 |
-| `-b:v 8M \`                                    | Average bit rate, lower to increase performance. |
-| `-maxrate 8M \`                                | Max bit rate. I always just specify this as the same as the average |
-| `-bufsize 16M \`                               | This has to do with how strict the buffering control is. I found double the average bitrate worked best. |
+| `-vcodec mpeg4 \`                              | In VLC, the XVID encoder is part of the MPEG4 encoder |
+| `-qscale:v 3 \`                                | Lower the video quality also greatly help improve stream performance. 1 is the highest quality and 31 is the lowest, but I found anything above 10 to be very very low quality. I found 3 to always give a good compromise, but on my iMac I can use 1 |
+| `-vtag XVID \`                                 | Enables the XVID encoder inside the MPEG4 encoder |
 | `-acodec libmp3lame \`                         | Streams as MP3 Audio. This is changeable, but I found MP3 was always easy for the PowerPC to handle |
 | `-b:a 192k \`                                  | MP3 bitrate. Good MP3 is usually 192k, 256k, or 320k. Note that because I could not get 44,100Hz audio into FFMPEG successfully, the audio will never really sound good for music until I figure that out. |
 | `-ac 2 \`                                      | 2 Channel Audio. |
 | `-f mpegts \`                                  | MPEG Transport Stream is the format we are using for streaming. |
 | `"udp://BonjourName.local:1234?pkt_size=1316"` | This is the destination of the stream, IP or Bonjour Name work here. ChatGPT said I should specify the packet size to perfectly match MPEGTS, but I am not sure if it helps or not. |
+
+## MPEG1 and MPEG2
+
+My 1GHz G4 was not really powerful enough to play MPEG2 at 720p. While this 
+machine can play DVD, you have to remember that DVD is MPEG2 at 480p max. So 
+720p is just too much for this CPU. However, MPEG1 did work pretty well at 
+about 8MBps of bandwidth. 
 
 ### MPEG1 Command for Copy and Paste
 
@@ -467,6 +449,25 @@ ffmpeg \
   -f mpegts \
   "udp://BonjourName.local:1234?pkt_size=1316"
 ```
+
+### MPEG1 Command Explanation
+
+| Command                                        | Explanation |
+|------------------------------------------------|-------------|
+| `ffmpeg`                                       |             |
+| `-f avfoundation \`                            |             |
+| `-framerate 20 \`                              | Lowering the framerate is one of the easiest ways to reduce load on the PowerPC CPU. I find 20 to be the best balance, but set it to a multiple of 60 for best performance. |
+| `-i "0:0" \`                                   | This is the AVFoundation device numbers, left is video and right is audio. You shouldn't change this unless you decide not to stream audio (covered below). |
+| `-vf scale=720x450 \`                          | Scaling the output size of the video is also one of the easiest ways to reduce load on the PowerPC CPU. I was able to get 720p working just fine on Leopard, but on Tiger I needed to reduce. Use `-vf scale=iw/2:ih/2` to reduce the resolution in half rather than manually calculating it. |
+| `-vcodec mpeg1video \`                         | MPEG1 encoder, you can change the 1 to 2 if you think your system can handle MPEG2 |
+| `-b:v 8M \`                                    | Average bit rate, lower to increase performance. |
+| `-maxrate 8M \`                                | Max bit rate. I always just specify this as the same as the average |
+| `-bufsize 16M \`                               | This has to do with how strict the buffering control is. I found double the average bitrate worked best. |
+| `-acodec libmp3lame \`                         | Streams as MP3 Audio. This is changeable, but I found MP3 was always easy for the PowerPC to handle |
+| `-b:a 192k \`                                  | MP3 bitrate. Good MP3 is usually 192k, 256k, or 320k. Note that because I could not get 44,100Hz audio into FFMPEG successfully, the audio will never really sound good for music until I figure that out. |
+| `-ac 2 \`                                      | 2 Channel Audio. |
+| `-f mpegts \`                                  | MPEG Transport Stream is the format we are using for streaming. |
+| `"udp://BonjourName.local:1234?pkt_size=1316"` | This is the destination of the stream, IP or Bonjour Name work here. ChatGPT said I should specify the packet size to perfectly match MPEGTS, but I am not sure if it helps or not. |
 
 ## Streaming without Audio
 
