@@ -17,24 +17,34 @@ But I didn't want to get it if it was going to sit on a shelf and collect dust.
 
 So before I bought it I tried this streaming setup to make sure it could work. 
 And I am very happy to report that I am happy with the results and this 
-machine now makes a great music video display for my KPOP while I am working.
+machine now makes a great music video display for my KPOP listening 
+enjoyment while I'm working.
 
-You can see all updates on my iMac G4 using the [\#iMacG4](https://jeffburg.social/tags/iMacG4)
-tag on my Mastodon. No account required. 
+You can see all updates on my iMac G4, including the restoration, 
+using the [\#iMacG4](https://jeffburg.social/tags/iMacG4) tag on my Mastodon. 
+No account required. 
 
 ## Background
+
 I am writing this in 2025 and I would say that it has been a good 10 years
 since pretty much any computing device we may have can easily easily stream 
 1080p and 4K content directly from the internet with absolutely no issues.
 
 However, before 2015, this was not always the case. I will paste in specs
-for the iPhone 5 and the original iPhone, emphasis mine:
+for the iPhone 5 and the original iPhone. You can see from the specs that 
+even with special decoding hardware, the iPhone could only do 480p H.264.
 
-iPhone 5 - 2007 \([Source](https://everymac.com/systems/apple/iphone/specs/apple-iphone-5-a1428-gsm-lte-4-17-north-america-specs.html)\):
+iPhone 5 - 2012 \([Source](https://everymac.com/systems/apple/iphone/specs/apple-iphone-5-a1428-gsm-lte-4-17-north-america-specs.html)\):
 > H.264 video up to 1080p, 30 frames per second
-iPhone - 2012 \([Source](https://everymac.com/systems/apple/iphone/specs/apple-iphone-specs.html)\)
+
+iPhone - 2007 \([Source](https://everymac.com/systems/apple/iphone/specs/apple-iphone-specs.html)\)
 > H.264 video, up to 1.5 Mbps, **640 by 480 pixels**, 30 frames per second, 
 > Low-Complexity version of the H.264 Baseline Profile
+
+As another anecdote, I remember having a [1.67GHz PowerBook G4](https://everymac.com/systems/apple/powerbook_g4/specs/powerbook_g4_1.67_15_hr.html)
+from late 2005 and being super amazed that it could rip DVD's into MPEG4 
+format (not H.264 yet) at 1x meaning that it ONLY took 2 hours to rip a 2 hour 
+DVD. This was incredible speed during this era.
 
 So while we may feel like high quality Youtube video playback has been a given
 forever, it actually has not. And so when when we use old Macs we may get
@@ -71,7 +81,7 @@ barely play back postage stamp sized video in H.264.
 ### How to Stream High Quality Video on a PowerPC Mac
 
 We are basically going to use the fact that we have a local high speed ethernet
-network that our PowerPC Mac sits on to stream an incredibly-high bit-rate
+network that our PowerPC Mac sits on to stream an incredibly high bit rate
 yet simple to decode video codec like MPEG1, MPEG2, or Xvid. We are going 
 to use so much bandwidth that even a modern internet connection would have 
 trouble streaming this video over the internet (10+Mbps). 
@@ -101,6 +111,10 @@ FFMPEG to capture 44,100 or 48,000hz audio on the host Mac. It always comes
 out poppy and out of sync and weird. So I had to reduce the audio quality on
 the capture side to 16,000hz which is not ideal.
 
+That said, this is a limitation of FFMPEG and not the PowerPC Mac. As we all 
+know, audio quality with high bit rate MP3 and AAC files on old Macs works 
+really well.
+
 ### System Requirements
 
 1. PowerPC Mac running at least Mac OS X 10.4 Tiger (10.5 Leopard preferred)
@@ -116,8 +130,9 @@ the capture side to 16,000hz which is not ideal.
       able to in Tiger. But Tiger still works fine, just lower quality.
 1. PowerPC Mac connected to your home network over ethernet: Sorry, the Airport
    cards on these old Macs are too slow for this.
-1. Apple Silicon Mac: It goes without saying that these Macs are so overpowered
-   for this that using this set up does not even push them at all.
+1. Apple Silicon Mac: This will be the streaming server. Theoretically, any 
+   computer that runs FFMPEG could be the streaming server. But this tutorial 
+   is for Apple Silicon Macs.
    
 #### My Setup
 
