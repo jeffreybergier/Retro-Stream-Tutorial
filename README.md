@@ -253,3 +253,49 @@ that because thats a normal app installation. - [Screenshot](Images/030-Test/01-
    1. [Full Screen Youtube](Images/030-Test/09-Test-Working3.png)
 1. Type Q in the Terminal to quit FFMPEG  - [Screenshot](Images/030-Test/10-Test-Quit.png)
 
+## Step 5: Prepare the PowerPC Mac
+
+Note that for Leopard, the VLC website say you can use VLC 2.0.10 but I found
+this version to have terrible performance. A search online revealed the same
+thing. Instead you should use the newest version of 1.0 that you can find. 
+Credit to [PowerPC Liberation: Video on PowerPC: Part 1 - Playback on G4/G5](https://powerpcliberation.blogspot.com/2012/08/video-on-powerpc-playback-on-g4g5.html)
+
+Note that due to the [The TLS Apocalypse](https://oldvcr.blogspot.com/2020/11/fun-with-crypto-ancienne-tls-for.html)
+mentioned above, you will almost certainly not be able to download these 
+directly on the PowerPC Mac. Instead you will need to download them on your
+modern Mac and then transfer them over file sharing.
+
+1. On the Apple Silicon Mac: Download an old version of VLC
+   1. Leopard: [VLC 1.1.12 from Macintosh Repository](https://www.macintoshrepository.org/11636-vlc-media-player) - [Screenshot](Images/040-PPC/01-PPC-Download-Leopard.png)
+   1. Tiger: [VLC 0.9.10 from VLC Website](https://www.videolan.org/vlc/download-macosx.html) - [Screenshot](Images/040-PPC/01-PPC-Download-Leopard.png)
+   1. Transfer the downloaded file to the PowerPC Mac via File Sharing
+      1. New Macs can still connect to the AFP servers on old versions of OSX.
+1. On the PowerPC Mac: Install and run VLC
+   1. [Leopard Screenshot](Images/040-PPC/03-PPC-VLC-Leopard.png)
+   1. [Tiger Screenshot](Images/040-PPC/03-PPC-VLC-Tiger.png)
+1. On the PowerPC Mac: Get the Bonjour Name
+   1. Note that this [used to be called Rendezvous](https://www.macworld.com/article/175569/rendezvous-10.html). 
+   So you might see that name used instead of Bonjour in the UI.
+   1. System Preferences→Sharing - [Leopard Screenshot](Images/040-PPC/05-PPC-Bonjour-Leopard.png)
+   1. System Preferences→Sharing - [Tiger Screenshot](Images/040-PPC/06-PPC-Bonjour-Tiger.png)
+1. On the VM: Start a new, much lower quality stream
+   1. ```
+      ffmpeg \
+        -f avfoundation \
+        -framerate 15 \
+        -i "0:0" \
+        -vf scale=iw/2:ih/2 \
+        -vcodec mpeg4 \
+        -qscale:v 10 \
+        -vtag XVID \
+        -acodec libmp3lame \
+        -b:a 192k \
+        -ac 2 \
+        -f mpegts \
+        "udp://BonjourName.local:1234?pkt_size=1316"
+      ```
+1. On the PowerPC Mac: Open VLC and choose File→Open Network - [Screenshot](Images/040-PPC/07-PPC-VLC-Open.png)
+   1. `udp://@:1234`
+   1. [Successfully Playing Stream Screenshot](Images/040-PPC/08-PPC-VLC-Play.png)
+1. (Optional) On the PowerPC Mac: Save the playlist for easy opening later - [Screenshot](Images/040-PPC/09-PPC-VLC-Save.png)
+
