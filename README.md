@@ -8,7 +8,30 @@ To see a video of the kind of quality you can expect,
 I have noticed that the streaming quality from Google Drive is not always 
 great, so download it to be sure you are seeing the full quality.
 
-## Who Am I?
+## Table of Contents
+- [Retro Stream Tutorial](#retro-stream-tutorial)
+  - [Who Am I](#who-am-i)
+  - [Background](#background)
+    - [Why Can't Old Computers Play Youtube](#why-cant-old-computers-play-youtube)
+    - [How to Stream High Quality Video on a PowerPC Mac](#how-to-stream-high-quality-video-on-a-powerpc-mac)
+    - [Known Limitations](#known-limitations)
+    - [System Requirements](#system-requirements)
+    - [Tools](#tools)
+    - [Why Use a Virtual Machine](#why-use-a-virtual-machine)
+- [Tutorial](#tutorial)
+  - [Step 1: Prepare your Virtual Machine](#step-1-prepare-your-virtual-machine)
+  - [Step 2: Install FFMPEG](#step-2-install-ffmpeg)
+  - [Step 3: Install Black Hole 2CH](#step-3-install-black-hole-2ch)
+  - [Step 4: Test on Your Modern Mac](#step-4-test-on-your-modern-mac)
+  - [Step 5: Prepare the PowerPC Mac](#step-5-prepare-the-powerpc-mac)
+  - [🥳Congratulations🎉](#congratulations)
+- [Optimize Playback Performance](#optimize-playback-performance)
+  - [XVID](#xvid)
+  - [MPEG1 and MPEG2](#mpeg1-and-mpeg2)
+  - [Streaming without Audio](#streaming-without-audio)
+- [FAQ](#faq)
+
+## Who Am I
 
 I'm Jeff, a software developer and general Mac lover. I recently got an 
 iMac G4 and restored it with SSD and max RAM. I got this machine because 
@@ -160,7 +183,11 @@ on your Mac to streaming to the PowerPC Mac. Using the VM means, you just
 manage the streaming session as a little window that you can resize or minimize
 without affecting the stream in progress.
 
-# Tutorial: Set up the Host
+# Tutorial
+
+I tried to add as many screenshots as possible. So if you are getting lost, 
+use Command+F and search for Screenshot to highlight all of the screenshot 
+links in the tutorial.
 
 ## Step 1: Prepare your Virtual Machine
 
@@ -310,7 +337,7 @@ modern Mac and then transfer them over file sharing.
    1. [Leopard Screenshot](Images/040-PPC/03-PPC-VLC-Leopard.png)
    1. [Tiger Screenshot](Images/040-PPC/03-PPC-VLC-Tiger.png)
 1. On the PowerPC Mac: Get the Bonjour Name
-   1. Note that this [used to be called Rendezvous](https://www.macworld.com/article/175569/rendezvous-10.html). 
+   1. Note that this [used to be called Rendezvous](https://www.mactech.com/2004/07/22/apple-to-change-rendezvous-name-in-settlement/). 
    So you might see that name used instead of Bonjour in the UI.
    1. System Preferences→Sharing - [Leopard Screenshot](Images/040-PPC/05-PPC-Bonjour-Leopard.png)
    1. System Preferences→Sharing - [Tiger Screenshot](Images/040-PPC/06-PPC-Bonjour-Tiger.png)
@@ -335,7 +362,7 @@ modern Mac and then transfer them over file sharing.
    1. [Successfully Playing Stream Screenshot](Images/040-PPC/08-PPC-VLC-Play.png)
 1. (Optional) On the PowerPC Mac: Save the playlist for easy opening later - [Screenshot](Images/040-PPC/09-PPC-VLC-Save.png)
 
-### 🥳Congratulations🎉
+## 🥳Congratulations🎉
 
 You have a successful streaming setup completed. Now its time to optimize 
 playback performance for your PowerPC Mac
