@@ -222,14 +222,13 @@ links in the tutorial.
    1. (Optional) Lock Screen: Disable Screensaver, Monitor Poweroff, and password - [Screenshot](Images/010-VM/11-VMSettings-LockScreen.png)
    1. (Optional) General→About: Give it a fun name - [Screenshot](Images/010-VM/12-VMSettings-Name.png)
    1. (Optional) General→Sharing: Enable Screen Sharing, File Sharing, and Remote Login - [Screenshot](Images/010-VM/13-VMSettings-Sharing.png)
-   1. **(Required)** Privacy→Screen Recording: Add Termina - [Screenshot](Images/010-VM/14-VMSettings-Privacy.png)
+   1. **(Required)** Privacy→Screen Recording: Add Terminal - [Screenshot](Images/010-VM/14-VMSettings-Privacy.png)
    1. (Optional) Software Update: Disable automatic updating - [Screenshot](Images/010-VM/15-VMSettings-Update1.png)
    1. (Optional) Software Update: Perform Updates that do not update to different major version of OSX
       1. Apple actually makes this kind of confusing. You need to look for 
         "Also Available→Other Updates Available→More Info"
-      1. [Screenshot 1](Images/010-VM/15-VMSettings-Update1.png) 
-      1. [Screenshot 2](Images/010-VM/16-VMSettings-Update2.png) 
-      1. [Screenshot 3](Images/010-VM/17-VMSettings-Update3.png) 
+      1. [More Info Screenshot](Images/010-VM/16-VMSettings-Update2.png) 
+      1. [Installing Software Update Screenshot](Images/010-VM/17-VMSettings-Update3.png) 
 1. Login to Youtube and play a video - you should hear sound through your Mac's speakers - [Screenshot](Images/010-VM/20-VMSettings-YoutubeLogin.png)
 
 ## Step 2: Install FFMPEG
@@ -266,18 +265,18 @@ link. If you don't want to do that, then you can use HomeBrew to install it.
    1. When you play through Speakers you should hear the video on the host Mac. 
    And when you change it to BlackHole you should no longer hear it.
 
-## Step 4: Test on Your Modern Mac
+## Step 4: Test on Your Apple Silicon Mac
 
 This requires you to install [install VLC](https://www.videolan.org/vlc/download-macosx.html)
 on your Apple Silicon Mac (not the PowerPC Mac and not the VM). I won't cover 
 that because thats a normal app installation. - [Screenshot](Images/030-Test/01-Test-Download.png)
 
-1. Get the capture device ID's - [Screenshot](Images/030-Test/01-Test-Devices.png)
+1. On the VM: Get the capture device ID's - [Screenshot](Images/030-Test/02-Test-Devices.png)
    1. FFMPEG Uses Apple's AVFoundation to capture system video and audio and 
       AVFoundation presents devices with an ID number. On the VM it should be
       `0:0` but it could be different. So lets find out
    1. `ffmpeg -f avfoundation -list_devices true -i ""`
-1. Get the Bonjour name for your Apple Silicon Mac - [Screenshot](Images/030-Test/03-Test-Bonjour.png)
+1. On the VM: Get the Bonjour name for your Apple Silicon Mac - [Screenshot](Images/030-Test/03-Test-Bonjour.png)
    1. System Settings→General→Sharing→Local Hostname
    1. When using UDP, the VM and FFMPEG are basically going to fire and forget
       a huge high-bandwidth stream of bits at the target computer. So when
@@ -287,13 +286,13 @@ that because thats a normal app installation. - [Screenshot](Images/030-Test/01-
    1. Note: If you want to change the Bonjour name it is best to change the
       whole system name under General→About→Name. Doing this will also change
       the bonjour name.
-1. Start the Stream - [Screenshot](Images/030-Test/04-Test-FFMPEG1.png)
+1. On the VM: Start the Stream - [Screenshot](Images/030-Test/04-Test-FFMPEG1.png)
    1. You need to change the Bonjour name on the last line of this command
    1. If the devices you found are not both 0, then you need to change 
       the line that says `-i 0:0`
    1. I will explain all of the options later in this tutorial
    1. When you run this command the first time, you will be asked to allow
-      the Terminal to access the microphone. Be sure to choose Allow. - [Screenshot](Images/030-Test/05-Test-FFMPEG2.png)
+      the Terminal to access the microphone. Be sure to choose "OK". - [Screenshot](Images/030-Test/05-Test-FFMPEG2.png)
    1. ```
       ffmpeg \
         -f avfoundation \
@@ -308,13 +307,13 @@ that because thats a normal app installation. - [Screenshot](Images/030-Test/01-
         -f mpegts \
         "udp://BonjourName.local:1234?pkt_size=1316"
       ```
-1. Start VLC and Choose File→Open Network - [Screenshot](Images/030-Test/06-Test-VLC.png)
+1. On the Apple Silicon Mac: Start VLC and Choose File→Open Network - [Screenshot](Images/030-Test/06-Test-VLC.png)
    1. Type `udp://@:1234` and click Open
 1. Success Screenshots
    1. [Initial Stream Results](Images/030-Test/07-Test-Working1.png)
    1. [Open Youtube in the VM](Images/030-Test/08-Test-Working2.png)
    1. [Full Screen Youtube](Images/030-Test/09-Test-Working3.png)
-1. Type Q in the Terminal to quit FFMPEG  - [Screenshot](Images/030-Test/10-Test-Quit.png)
+1. On the VM: Type Q in the Terminal to quit FFMPEG  - [Screenshot](Images/030-Test/10-Test-Quit.png)
 
 ## Step 5: Prepare the PowerPC Mac
 
@@ -330,15 +329,15 @@ modern Mac and then transfer them over file sharing.
 
 1. On the Apple Silicon Mac: Download an old version of VLC
    1. Leopard: [VLC 1.1.12 from Macintosh Repository](https://www.macintoshrepository.org/11636-vlc-media-player) - [Screenshot](Images/040-PPC/01-PPC-Download-Leopard.png)
-   1. Tiger: [VLC 0.9.10 from VLC Website](https://www.videolan.org/vlc/download-macosx.html) - [Screenshot](Images/040-PPC/01-PPC-Download-Leopard.png)
+   1. Tiger: [VLC 0.9.10 from VLC Website](https://www.videolan.org/vlc/download-macosx.html) - [Screenshot](Images/040-PPC/02-PPC-Download-Tiger.png)
    1. Transfer the downloaded file to the PowerPC Mac via File Sharing
       1. New Macs can still connect to the AFP servers on old versions of OSX.
 1. On the PowerPC Mac: Install and run VLC
    1. [Leopard Screenshot](Images/040-PPC/03-PPC-VLC-Leopard.png)
-   1. [Tiger Screenshot](Images/040-PPC/03-PPC-VLC-Tiger.png)
+   1. [Tiger Screenshot](Images/040-PPC/04-PPC-VLC-Tiger.png)
 1. On the PowerPC Mac: Get the Bonjour Name
    1. Note that this [used to be called Rendezvous](https://www.mactech.com/2004/07/22/apple-to-change-rendezvous-name-in-settlement/). 
-   So you might see that name used instead of Bonjour in the UI.
+      So you might see that name used instead of Bonjour in the UI.
    1. System Preferences→Sharing - [Leopard Screenshot](Images/040-PPC/05-PPC-Bonjour-Leopard.png)
    1. System Preferences→Sharing - [Tiger Screenshot](Images/040-PPC/06-PPC-Bonjour-Tiger.png)
 1. On the VM: Start a new, much lower quality stream
