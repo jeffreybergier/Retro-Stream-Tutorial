@@ -126,7 +126,7 @@ without affecting the stream in progress.
 
 # Tutorial: Set up the Host
 
-## Step 1: Set up your Virtual Machine
+## Step 1: Prepare your Virtual Machine
 
 1. Install [Virtual Buddy](https://github.com/insidegui/VirtualBuddy)
 1. Open Virtual Buddy and create a new VM
@@ -299,3 +299,149 @@ modern Mac and then transfer them over file sharing.
    1. [Successfully Playing Stream Screenshot](Images/040-PPC/08-PPC-VLC-Play.png)
 1. (Optional) On the PowerPC Mac: Save the playlist for easy opening later - [Screenshot](Images/040-PPC/09-PPC-VLC-Save.png)
 
+### 🥳Congratulations🎉
+
+You have a successful streaming setup completed. Now its time to optimize 
+playback performance for your PowerPC Mac
+
+# Optimize Playback Performance
+
+All of my testing was done on my 1GHz iMac G4. But if you have a more powerful
+Mac, you can get more bandwidth and quality out of it. Likewise, if you have 
+a slower Mac, you can reduce quality.
+
+To increase the speed of debugging, know that you can press Q to quit the
+FFMPEG server and then change the settings and restart it again. The PowerPC 
+Mac will just pause until you restart FFMPEG. Note that you can only change 
+minor settings like framerate and quality settings. If you change resolution 
+or codecs, then you will need to stop the stream on the PowerPC Mac and 
+restart it.
+
+## XVID
+
+Overall, I found XVID had the best balance of quality and smoothness on my iMac 
+but MPEG 1 was really close as well.
+
+### XVID Command Explanation
+
+| Command                                        | Explanation |
+|------------------------------------------------|-------------|
+| `ffmpeg`                                       |             |
+| `-f avfoundation \`                            |             |
+| `-framerate 20 \`                              | Lowering the framerate is one of the easiest ways to reduce load on the PowerPC CPU. I find 20 to be the best balance, but set it to a multiple of 60 for best performance. |
+| `-i "0:0" \`                                   | This is the AVFoundation device numbers, left is video and right is audio. You shouldn't change this unless you decide not to stream audio (covered below). |
+| `-vf scale=720x450 \`                          | Scaling the output size of the video is also one of the easiest ways to reduce load on the PowerPC CPU. I was able to get 720p working just fine on Leopard, but on Tiger I needed to reduce. Use `-vf scale=iw/2:ih/2` to reduce the resolution in half rather than manually calculating it. |
+| `-vcodec mpeg4 \`                              | In VLC, the XVID encoder is part of the MPEG4 encoder |
+| `-qscale:v 3 \`                                | Lower the video quality also greatly help improve stream performance. 1 is the highest quality and 31 is the lowest, but I found anything above 10 to be very very low quality. I found 3 to always give the best compromise |
+| `-vtag XVID \`                                 | Enables the XVID encoder inside the MPEG4 encoder |
+| `-acodec libmp3lame \`                         | Streams as MP3 Audio. This is changeable, but I found MP3 was always easy for the PowerPC to handle |
+| `-b:a 192k \`                                  | MP3 bitrate. Good MP3 is usually 192k, 256k, or 320k. Note that because I could not get 44,100Hz audio into FFMPEG successfully, the audio will never really sound good for music until I figure that out. |
+| `-ac 2 \`                                      | 2 Channel Audio. |
+| `-f mpegts \`                                  | MPEG Transport Stream is the format we are using for streaming. |
+| `"udp://BonjourName.local:1234?pkt_size=1316"` | This is the destination of the stream, IP or Bonjour Name work here. ChatGPT said I should specify the packet size to perfectly match MPEGTS, but I am not sure if it helps or not. |
+
+### XVID Command for Copy and Paste
+
+Note I removed the scaling command. You can add it back in if needed.
+
+```
+ffmpeg \
+  -f avfoundation \
+  -framerate 20 \
+  -i "0:0" \
+  -vcodec mpeg4 \
+  -qscale:v 3 \
+  -vtag XVID \
+  -acodec libmp3lame \
+  -b:a 192k \
+  -ac 2 \
+  -f mpegts \
+  "udp://BonjourName.local:1234?pkt_size=1316"
+```
+
+## MPEG1 and MPEG2
+
+My 1GHz G4 was not really powerful enough to play MPEG2 at 720p. While this 
+machine can play DVD, you have to remember that DVD is MPEG2 at 480p max. So 
+720p is just too much for this CPU. However, MPEG1 did work pretty well at 
+about 8MBps of bandwidth. 
+
+### MPEG1 Command Explanation
+
+| Command                                        | Explanation |
+|------------------------------------------------|-------------|
+| `ffmpeg`                                       |             |
+| `-f avfoundation \`                            |             |
+| `-framerate 20 \`                              | Lowering the framerate is one of the easiest ways to reduce load on the PowerPC CPU. I find 20 to be the best balance, but set it to a multiple of 60 for best performance. |
+| `-i "0:0" \`                                   | This is the AVFoundation device numbers, left is video and right is audio. You shouldn't change this unless you decide not to stream audio (covered below). |
+| `-vf scale=720x450 \`                          | Scaling the output size of the video is also one of the easiest ways to reduce load on the PowerPC CPU. I was able to get 720p working just fine on Leopard, but on Tiger I needed to reduce. Use `-vf scale=iw/2:ih/2` to reduce the resolution in half rather than manually calculating it. |
+| `-vcodec mpeg1video \`                         | MPEG1 encoder, you can change the 1 to 2 if you think your system can handle MPEG2 |
+| `-b:v 8M \`                                    | Average bit rate, lower to increase performance. |
+| `-maxrate 8M \`                                | Max bit rate. I always just specify this as the same as the average |
+| `-bufsize 16M \`                               | This has to do with how strict the buffering control is. I found double the average bitrate worked best. |
+| `-acodec libmp3lame \`                         | Streams as MP3 Audio. This is changeable, but I found MP3 was always easy for the PowerPC to handle |
+| `-b:a 192k \`                                  | MP3 bitrate. Good MP3 is usually 192k, 256k, or 320k. Note that because I could not get 44,100Hz audio into FFMPEG successfully, the audio will never really sound good for music until I figure that out. |
+| `-ac 2 \`                                      | 2 Channel Audio. |
+| `-f mpegts \`                                  | MPEG Transport Stream is the format we are using for streaming. |
+| `"udp://BonjourName.local:1234?pkt_size=1316"` | This is the destination of the stream, IP or Bonjour Name work here. ChatGPT said I should specify the packet size to perfectly match MPEGTS, but I am not sure if it helps or not. |
+
+### MPEG1 Command for Copy and Paste
+
+Note I removed the scaling command. You can add it back in if needed.
+
+```
+ffmpeg \
+  -f avfoundation \
+  -framerate 20 \
+  -i "0:0" \
+  -c:v mpeg1video \
+  -b:v 8M \
+  -maxrate 8M \
+  -bufsize 16M \
+  -acodec libmp3lame \
+  -b:a 192k \
+  -ar 32000 \
+  -ac 2 \
+  -f mpegts \
+  "udp://BonjourName.local:1234?pkt_size=1316"
+```
+
+## Streaming without Audio
+
+There are many reasons you may not want to stream with Audio
+
+### Advantages
+
+ - 16,000 Hz just sounds bad. Until I figure out how to get 44,100 Hz out of 
+   the Virtual Machine, I don't think its realistic to listen to music via 
+   this streaming solution.
+ - Your Apple Silicon Mac has better audio connectivity options like Airpods
+ - Streaming the audio does take some performance away from the video
+
+### Disadvantages
+
+ - The audio being played on your Apple Silicon Mac will always be 1 or 2 
+   seconds out of sync with the video being played on your PowerPC Mac
+   - I am open to suggestions on how to manually add an audio delay to the 
+     Virtual Machine. But I wasn't able to find anything that would do more 
+     than 1 second... which I wasn't sure would really be enough.
+
+### XVID Command without Audio Streaming
+
+ - The `-i` command changed to only include the video `"0:"`
+ - Deleted 3 rows related to audio
+   - `-acodec libmp3lame \`
+   - `-b:a 192k \`
+   - `-ac 2 `
+
+```
+ffmpeg \
+  -f avfoundation \
+  -framerate 20 \
+  -i "0:" \
+  -vcodec mpeg4 \
+  -qscale:v 3 \
+  -vtag XVID \
+  -f mpegts \
+  "udp://BonjourName.local:1234?pkt_size=1316"
+```
