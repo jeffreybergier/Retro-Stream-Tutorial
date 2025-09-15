@@ -154,15 +154,15 @@ the video codec further.
 
 The [original version of this tutorial](README-MacVM.md) was entirely Mac based 
 however, I still used a VM because  AVFoundation only lets FFMPEG capture
-entire screens and I thought it was not very convenient to give an entire
+entire screens and I thought it was not very convenient to give up a whole
 monitor streaming. But primary, there is some sort of bug in FFMPEG that makes
 capturing high quality audio via AVFoundation not work properly. I think its 
 [Bug #11398](https://trac.ffmpeg.org/ticket/11398) but I'm not sure.
 
 But as could be expected, FFMPEG works great with Linux. That said, I did many
 many hours of troubleshooting and I found some critical things you need from
-your Linux Video Streaming Server. So below is the easiest way I found to do
-this. But you can use your own Linux server as long as:
+your Linux Video Streaming Server. This tutorial is the easiest way I found to
+do this. But you can use your own Linux server as long as:
 
 - It runs X11: This is not the default for many years, but Ubuntu 25.10 drops X11 entirely
 - It runs Pipewire 1.4.2: Debian 12 by default runs a very old version of Pipewire and it does not work properly for this streaming setup
@@ -171,13 +171,13 @@ this. But you can use your own Linux server as long as:
 # Tutorial
 
 I tried to add as many screenshots as possible. So if you are getting lost, 
-use Command+F and search for Screenshot to highlight all of the screenshot 
+use Command+F and search for "Screenshot" to highlight all of the screenshot 
 links in the tutorial.
 
 Also note that if you use the Debian VM image I link below, then copy and paste
 works between the Host Mac and the VM Linux. However, remember that Linux uses
-the Control key instead of command. Also, the terminal in Linux uses
-Conotrol + Shift + C and Control + Shift + V
+the Control key instead of Command. Also, the terminal in Linux uses
+Conotrol + Shift + C and Control + Shift + V.
 
 ## Step 1: Prepare your Virtual Machine
 
@@ -378,7 +378,7 @@ minor settings like framerate and quality settings. If you change resolution
 or codecs, then you will need to stop the stream on the PowerPC Mac and 
 restart it.
 
-## FFMPEG Commmand Explanation
+## High Quality FFMPEG Command
 
 Here is our example command which I find to have very quality and performance
 on the iMac G4 1GHz. But based on your specific Mac, you may want to change
@@ -394,7 +394,7 @@ ffmpeg \
   -f mpegts "udp://Your-Retro-Mac-Bonjour-Name.local:1234?pkt_size=1316"
 ```
 
-### XVID Command Explanation
+### FFMPEG Command Explanation
 
 | Command                                                                  | Explanation |
 |--------------------------------------------------------------------------|-------------|
@@ -406,25 +406,29 @@ ffmpeg \
 | `-vf "eq=gamma=0.80,scale=1152x720" \`                                   | This specifies the video filter - You can do add many filters, but here we scale the video to be lower resolution and change the gamma to be darker (older Macs had a brighter gamma, so modern content can look washed out) |
 | `-f mpegts "udp://Your-Retro-Mac-Bonjour-Name.local:1234?pkt_size=1316"` | This specifies the destination for the UDP stream (Your retro Mac) |
 
-## Troubleshooting / Modifying FFMPEG Commands
+## Modifying FFMPEG Commands
 
-I highly recommend using ChatGPT or another LLM to help you with FFMPEG. This is
-where I learned everything for FFMPEG. I only use the free account and its
-perfectly adequate. For example, here is a sample prompt and a screenshot of the
-response. You can see that it exactly modified the one line that needed to
-change.
+As FFMPEG is extremely complex, I highly recommend using ChatGPT or another LLM
+to help you with FFMPEG. This is where I learned everything for FFMPEG. I only
+use the free ChatGPT account and its perfectly adequate. For example, here is a
+sample prompt and a screenshot of the response. You can see that it exactly
+modified the one line that needed to change.
 
-> 
-> Hi, I need help with FFMPEG. I am using Debian 12 with Backports installed to stream to an iMac G4 running Leopard and VLC. The iMac doesn't have much processor power and so I am trying to optimize performance. I have this FFMPEG command that streams in XVID and it plays pretty smoothly on my iMac, but I want to try MPEG2. Can you update the command to use MPEG2?
-> 
-> ffmpeg \
->   -f x11grab -framerate 20 -draw_mouse 0 -i $DISPLAY \
->   -f pulse -i default \
->   -c:v mpeg4 -qscale:v 3 -vtag XVID \
->   -c:a aac -b:a 192k -ac 2 -ar 44100 \
->   -vf "eq=gamma=0.80,scale=1152x720" \
->   -f mpegts "udp://Your-Retro-Mac-Bonjour-Name.local:1234?pkt_size=1316"
-> 
+```
+Hi, I need help with FFMPEG. I am using Debian 12 with Backports installed to
+stream to an iMac G4 running Leopard and VLC. The iMac doesn't have much
+processor power and so I am trying to optimize performance. I have this FFMPEG
+command that streams in XVID and it plays pretty smoothly on my iMac, but I
+want to try MPEG2. Can you update the command to use MPEG2?
+
+ffmpeg \
+  -f x11grab -framerate 20 -draw_mouse 0 -i $DISPLAY \
+  -f pulse -i default \
+  -c:v mpeg4 -qscale:v 3 -vtag XVID \
+  -c:a aac -b:a 192k -ac 2 -ar 44100 \
+  -vf "eq=gamma=0.80,scale=1152x720" \
+  -f mpegts "udp://Your-Retro-Mac-Bonjour-Name.local:1234?pkt_size=1316"
+```
 
 ![ChatGPT Help](Images/050-Debian/18-ChatGPT-Codec.png)
 
@@ -434,38 +438,149 @@ change.
    1. Yeah, this is very hard on your old Mac. My iMac G4 can do it for hours
       with no stability challenges, but we are talking 100% CPU and many many 
       gigabytes of network traffic.
-   1. This is more of a question on outlook of life than anything else. I 
-      didn't get my retro Mac so it could sit on the shelf and look pretty. 
-      They were meant to be used and so I wanted to use it as my
-      secondary/background music screen.
+   1. I think this is more of a philosophical question than a technical one. I
+      feel like these beautiful, powerful machines were meant to be used rather
+      than sitting on a shelf.
 1. Won't this slow down my Apple Silicon Mac?
    1. I have the absolute slowest Apple Silicon Mac. Its an M1 MacBook Air
       with no fan. Its true that this solution takes about 100% of 1 core of 
       the CPU. But I have not noticed any slow downs or throttling. This 
       includes when I am using Xcode to develop software for iOS and Mac apps.
-1. There must be a way to get 44,100Hz sampling?
-   1. I agree. This has been a big annoyance, but since I listen to the audio 
-      on my Airpods anyway instead of through the stream, I haven't dove into
-      more than a few hours.
-   1. Perhaps if I used a Linux VM this would not be a problem? I also thought
-      that it was because I was doing the audio recording in a VM... but I 
-      did the exact same setup on the MacBook Air directly and it had the same 
-      issue. So, not sure at all what the problem is.
 1. Can this be done without an Apple Silicon Mac?
    1. Absolutely! The server could be any machine that runs FFMPEG which is 
       pretty much any machine. I look forward to seeing a future tutorial that 
       uses a Raspberry Pi 🍓
-   1. I just created this tutorial using Virtual Buddy and Apple Silicon 
-      because thats what I have. But there is no reason the exact same thing 
-      can't be done with an Intel Mac and VMWare Fusion 
-      (which is free now by the way)
-   1. Also, a Virtual Machine is totally not needed. For example you could 
-      get one of these [HDMI dummy plugs](https://www.amazon.com/Woieyeks-Virtual-Emulator-Headless-Supports/dp/B0CKKLTWMN/ref=sr_1_3?crid=2I5T3W67D1BIN&dib=eyJ2IjoiMSJ9.V54_l_dy5H-QDQPGm4g64-IB4nnDKf6MMnGSzGvNaa04HMqCrtl_czQuKDGjzR34HWrJ0t9lDaNQOTOnfdk6Kza_xoSY4_EpvtrPCd6MZzrWcPd6eXbIOZ4-kROOlNDpiB3sy7UaIzeBHIYQDTen3DneHtjS2mhbMYfVTxIo9lEHalFwkwXg7XSfYfZh79h9O-EWcOsyRawr2s1EyhAbp0LePhoqbrCzGr0P1Qhg5Io.hdRAftjL-y2y_Og7ss0CIH8VCx6QJecdZOSzQT2h7LM&dib_tag=se&keywords=HDMI%2BDummy%2BPlug&qid=1755416251&refresh=1&sprefix=hdmi%2Bdummy%2Bplug%2Caps%2C283&sr=8-3&th=1) 
-      and use that "screen" as the capture device for FFMPEG/AVFoundation and 
-      then use your PowerPC Mac as a second monitor for your main Mac. 
-      My MacBook Air only supports one  external monitor, so I did not take 
-      this approach.
-1. Dedicating 4 Cores and 8GB of RAM to this VM seems excessive, no?
-   1. I agree. After I got everything all set up and running, I lowered the 
-      the CPU Cores to 2 and the RAM to 4GB and macOS Ventura still seems to 
-      run fine and stream video with no issues.
+   1. I just created this tutorial using UTM and Apple Silicon because thats
+      what I have. But there is no reason the exact same thing can't be done 
+      with an Intel Mac and VMWare Fusion (which is free now by the way)
+
+# Advanced
+
+## FFMPEG Multi-Stream
+
+FFMPEG with MPEGTS streaming protocol can actually stream to multiple computers
+at once over UDP. Why would you want to do this? Well, if you have a whole 
+army of retro computers, you could have them all play the same video at once…
+Or more likely, you are interested in using modern bluetooth audio options to
+listen to the stream while using the retro Mac to display the content.
+
+Unfortunately, this will not result in every computer playing in sync. The UDP
+stream just flies out of the Linux VM and the client computers play it as
+quickly as they can with no regard to eachother.
+
+Whats different in this command?
+
+```
+ffmpeg \
+  -f x11grab -framerate 20 -draw_mouse 0 -i $DISPLAY \
+  -f pulse -i default \
+  -c:v mpeg4 -qscale:v 3 -vtag XVID \
+  -c:a aac -b:a 192k -ac 2 -ar 44100 -async 1 \
+  -vf "eq=gamma=0.80,scale=1152x720,tpad=start_duration=0" \
+  -af "adelay=0|0" \
+  -f mpegts "udp://Lamps-Plus.local:1234?pkt_size=1316" \
+  -f mpegts "udp://Pinkinium.local:1234?pkt_size=1316"
+```
+
+1. `-f mpegts` 2x - Specify as many destinations as you like
+1. `-vf` - Added `tpad=start_duration=0` - Change the zero to a number in **seconds** to cause video to be delayed in order aid with syncing
+1. `-af` - Added Audio Filter - `adelay=0|0"` - Change the 0|0 to a number in **milliseconds** to cause audio to be delayed in order aid with syncing. Each side of the | is left and right channel, so the numbers should be the same.
+
+## Set Exact Resolution in Debian
+
+The Debian VM boots to 1280x800 which is a pretty good resolution for a lot of
+retro Macs as long as they are widescreen. However, you may want to set the
+virtual machine to a different resolution. This can be done pretty easily in
+the Settings app under Displays. However, not all resolutions are in there.
+Also, all of those resolutions are at 60Hz which makes sense because thats
+a typical desktop refresh rate. So why would you want to change the resolution?
+
+1. Using the -vf scale option is actually kind of compute intensive because
+   FFMPEG has to scale the video before sending it over the wire
+1. 60Hz is likely way faster than your Retro Mac will be able to render. So this
+   is also wasting performance of the Virtual Machine and the Host Mac.
+   
+### How to Set the Resolution Manually on the Debian VM
+
+Declare to the system which resolution you want
+
+`cvt 1152 720 30`
+
+The output will look something like this, and we are interested in the Modeline
+
+```
+debian@debian:~$ cvt 1152 720 30
+# 1152x720 29.96 Hz (CVT) hsync: 22.05 kHz; pclk: 31.75 MHz
+Modeline "1152x720_30.00"   31.75  1152 1184 1296 1440  720 723 729 736 -hsync +vsync
+```
+
+Add the resolution to the windowing system. Execute the 2 commands and make
+sure the first one matches the Modeline output exactly.
+
+```
+xrandr --newmode "1152x720_30.00" 31.75 1152 1184 1296 1440 720 723 729 736 -hsync +vsync
+xrandr --addmode Virtual-1 "1152x720_30.00"
+```
+
+Now set the resolution. After you run this command, the resolution should
+change and the UTM window will resize.
+
+`xrandr --output Virtual-1 --mode "1152x720_30.00"`
+
+Now the issue is that this will not persist across reboots and you will have
+to run these 3 commands every time. To fix that we need to save the monitor
+configuration in X11.
+
+```
+sudo mkdir -p /etc/X11/xorg.conf.d
+sudo vi /etc/X11/xorg.conf.d/10-monitor.conf
+```
+
+And put the text in the configuration file. Again, make sure the Modeline
+matches exactly.
+
+```
+Section "Monitor"
+    Identifier "Virtual-1"
+    Modeline "1152x720_30.00" 31.75 1152 1184 1296 1440 720 723 729 736 -hsync +vsync
+    Option "PreferredMode" "1152x720_30.00"
+EndSection
+
+Section "Screen"
+    Identifier "Screen0"
+    Monitor "Virtual-1"
+    DefaultDepth 24
+    SubSection "Display"
+        Modes "1152x720_30.00"
+    EndSubSection
+EndSection
+```
+
+Now when you restart, it should boot into the resolution you specified. Note
+that it will have 3 resolutions during boot. The basic 800x600 used by Grub,
+then it resizes to 1280x800 as the default resolution before X11 starts up, and
+then when you get to the login screen or the desktop, it will resize to your
+selected resolution.
+
+## Reduce System Requirements of the VM
+
+After you get everything working, and you know everything works smoothly
+and without hiccups most of the time, then you can reduce the amount of 
+resources the VM is allowed to use. By default its 4 cores and 4GB of RAM.
+
+When you have your streaming setup running, use HTOP to see how much RAM
+and how much CPU is in use. HTOP does not come on debian so you can install it.
+
+```
+sudo apt update
+sudo apt install htop
+htop
+```
+
+In my system. I found it rarely used more than 2GB of RAM and all 4 CPU cores
+were at about 25% when streaming was running. So I decided to reduce the 
+available resources to 2 Cores and 3GB of RAM… I found 1 Core caused skipping
+and other problems with the stream. In UTM you can change the settings
+however you like to reduce the burden on your host Mac.
+
+![UTM System Settings](Images/050-Debian/19-UTM-Processor.png)
